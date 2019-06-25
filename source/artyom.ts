@@ -9,7 +9,6 @@
  * @see https://sdkcarlos.github.io/sites/artyom.html
  * @see http://docs.ourcodeworld.com/projects/artyom-js
  */
-
 /// <reference path="artyom.d.ts" />
 // Remove "export default " keywords if willing to build with `npm run artyom-build-window`
 export default class Artyom {
@@ -61,11 +60,11 @@ export default class Artyom {
      * Object that stores 2 single properties
      */
     private Device : IDevice;
-    
-    // Triggered at the declaration of 
+
+    // Triggered at the declaration of
     constructor() {
         this.ArtyomCommands = [];
-        
+
         this.ArtyomVoicesIdentifiers = {
             // German
             "de-DE": ["Google Deutsch","de-DE","de_DE"],
@@ -74,7 +73,7 @@ export default class Artyom {
             // Italian
             "it-IT" : ["Google italiano","it-IT","it_IT"],
             // Japanese
-            "jp-JP": ["Google 日本人","ja-JP","ja_JP"],
+            "ja-JP": ["Google 日本人","ja-JP","ja_JP"],
             // English USA
             "en-US": ["Google US English","en-US","en_US"],
             // English UK
@@ -260,7 +259,7 @@ export default class Artyom {
                 default:
                     console.log(
                         `%c${preMessage}:%c ${message}`,
-                        'background: #005454; color: #BFF8F8', 
+                        'background: #005454; color: #BFF8F8',
                         'color:black;'
                     );
                     break;
@@ -292,9 +291,9 @@ export default class Artyom {
 
         if (!_this.Device.isChrome) {
             let message = "Error: the Speech Recognition and Speech Synthesis APIs require the Google Chrome Browser to work.";
-            
+
             console.error(message);
-            
+
             return {
                 code: "artyom_error_browser_unsupported",
                 message: message
@@ -367,7 +366,7 @@ export default class Artyom {
 
                 // Process RegExp
                 if(opcion instanceof RegExp){
-                    // If RegExp matches 
+                    // If RegExp matches
                     if(opcion.test(voz)){
                         _this.debug(">> REGEX "+ opcion.toString() + " MATCHED AGAINST " + voz + " WITH INDEX " + c + " IN COMMAND ", "info");
                         encontrado = parseInt(c.toString());
@@ -419,7 +418,7 @@ export default class Artyom {
 
             if (encontrado >= 0) {
                 _this.triggerEvent(_this.ArtyomGlobalEvents.COMMAND_MATCHED);
-                
+
                 let response : MatchedCommand = {
                     index: encontrado,
                     instruction: instruction,
@@ -678,7 +677,7 @@ export default class Artyom {
 
     /**
      * Retrieves the used version of Artyom.js
-     * 
+     *
      * @returns {String}
      */
     getVersion() {
@@ -698,10 +697,10 @@ export default class Artyom {
         let start_timestamp;
         let artyom_is_allowed;
         let _this : Artyom = this;
-        
+
         /**
          * On mobile devices the recognized text is always thrown twice.
-         * By setting the following configuration, fixes the issue 
+         * By setting the following configuration, fixes the issue
          */
         if(this.Device.isMobile){
             this.ArtyomWebkitSpeechRecognition.continuous = false;
@@ -713,7 +712,7 @@ export default class Artyom {
         }
 
         this.ArtyomWebkitSpeechRecognition.lang = this.ArtyomProperties.lang;
-        
+
         this.ArtyomWebkitSpeechRecognition.onstart = () => {
             _this.debug("Event reached : " + _this.ArtyomGlobalEvents.COMMAND_RECOGNITION_START);
             _this.triggerEvent(_this.ArtyomGlobalEvents.COMMAND_RECOGNITION_START);
@@ -780,7 +779,7 @@ export default class Artyom {
             }else{
                 // If the fatality promise callback was set, invoke it
                 if(_this.ArtyomProperties.helpers.fatalityPromiseCallback){
-                    
+
                     // As the speech recognition doesn't finish really, wait 500ms
                     // to trigger the real fatality callback
                     setTimeout(() => {
@@ -1189,7 +1188,7 @@ export default class Artyom {
 
     /**
      * Verify if there's a voice available for a language using its language code identifier.
-     * 
+     *
      * @return {Boolean}
      */
     voiceAvailable(languageCode: string) {
@@ -1283,10 +1282,10 @@ export default class Artyom {
      */
     getVoice(languageCode: string) {
         let voiceIdentifiersArray = this.ArtyomVoicesIdentifiers[languageCode];
-        
+
         if(!voiceIdentifiersArray){
             console.warn(`The providen language ${languageCode} isn't available, using English Great britain as default` );
-           
+
             voiceIdentifiersArray = this.ArtyomVoicesIdentifiers["en-GB"];
         }
 
@@ -1406,7 +1405,7 @@ export default class Artyom {
 
         let copyActualCommands = (<any>Object).assign([], this.ArtyomCommands);
         let _this = this;
-        
+
         this.emptyCommands();
 
         let promptCommand : ArtyomCommand = {
@@ -1588,11 +1587,11 @@ export default class Artyom {
 
         return true;
     }
-    
+
     /**
      * Restarts artyom with the initial configuration.
-     * 
-     * @param configuration 
+     *
+     * @param configuration
      */
     restart(){
         let _this : Artyom = this;
@@ -1630,7 +1629,7 @@ export default class Artyom {
                 availableVoice = _this.getVoice(callbacks.lang);
             }
         }
-        
+
         // If is a mobile device, provide only the language code in the lang property i.e "es_ES"
         if(this.Device.isMobile){
 
