@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Artyom.js is a voice control, speech recognition and speech synthesis JavaScript library.
  *
@@ -10,7 +11,6 @@
  * @see https://sdkcarlos.github.io/sites/artyom.html
  * @see http://docs.ourcodeworld.com/projects/artyom-js
  */
-Object.defineProperty(exports, "__esModule", { value: true });
 /// <reference path="artyom.d.ts" />
 // Remove "export default " keywords if willing to build with `npm run artyom-build-window`
 var Artyom = /** @class */ (function () {
@@ -29,9 +29,20 @@ var Artyom = /** @class */ (function () {
             // English USA
             "en-US": ["Google US English", "en-US", "en_US"],
             // English UK
-            "en-GB": ["Google UK English Male", "Google UK English Female", "en-GB", "en_GB"],
+            "en-GB": [
+                "Google UK English Male",
+                "Google UK English Female",
+                "en-GB",
+                "en_GB",
+            ],
             // Brazilian Portuguese
-            "pt-BR": ["Google português do Brasil", "pt-PT", "pt-BR", "pt_PT", "pt_BR"],
+            "pt-BR": [
+                "Google português do Brasil",
+                "pt-PT",
+                "pt-BR",
+                "pt_PT",
+                "pt_BR",
+            ],
             // Portugal Portuguese
             // Note: in desktop, there's no voice for portugal Portuguese
             "pt-PT": ["Google português do Brasil", "pt-PT", "pt_PT"],
@@ -52,25 +63,26 @@ var Artyom = /** @class */ (function () {
             // Cantonese Chinese
             "zh-HK": ["Google 粤語（香港）", "zh-HK", "zh_HK"],
             // Native voice
-            "native": ["native"]
+            native: ["native"],
         };
         // Important: retrieve the voices of the browser as soon as possible.
         // Normally, the execution of speechSynthesis.getVoices will return at the first time an empty array.
-        if (window.hasOwnProperty('speechSynthesis')) {
+        if (window.hasOwnProperty("speechSynthesis")) {
             speechSynthesis.getVoices();
         }
         else {
             console.error("Artyom.js can't speak without the Speech Synthesis API.");
         }
         // This instance of webkitSpeechRecognition is the one used by Artyom.
-        if (window.hasOwnProperty('webkitSpeechRecognition')) {
-            this.ArtyomWebkitSpeechRecognition = new window.webkitSpeechRecognition();
+        if (window.hasOwnProperty("webkitSpeechRecognition")) {
+            this.ArtyomWebkitSpeechRecognition = new (window).webkitSpeechRecognition();
         }
         else {
             console.error("Artyom.js can't recognize voice without the Speech Recognition API.");
         }
         this.ArtyomProperties = {
-            lang: 'en-GB',
+            asrLang: "en-GB",
+            lang: "en-GB",
             recognizing: false,
             continuous: false,
             speed: 1,
@@ -82,18 +94,18 @@ var Artyom = /** @class */ (function () {
                 redirectRecognizedTextOutput: null,
                 remoteProcessorHandler: null,
                 lastSay: null,
-                fatalityPromiseCallback: null
+                fatalityPromiseCallback: null,
             },
             executionKeyword: null,
             obeyKeyword: null,
             speaking: false,
             obeying: true,
             soundex: false,
-            name: null
+            name: null,
         };
         this.ArtyomGarbageCollection = [];
         this.ArtyomFlags = {
-            restartRecognition: false
+            restartRecognition: false,
         };
         this.ArtyomGlobalEvents = {
             ERROR: "ERROR",
@@ -103,13 +115,19 @@ var Artyom = /** @class */ (function () {
             COMMAND_RECOGNITION_START: "COMMAND_RECOGNITION_START",
             COMMAND_RECOGNITION_END: "COMMAND_RECOGNITION_END",
             COMMAND_MATCHED: "COMMAND_MATCHED",
-            NOT_COMMAND_MATCHED: "NOT_COMMAND_MATCHED"
+            NOT_COMMAND_MATCHED: "NOT_COMMAND_MATCHED",
         };
         this.Device = {
             isMobile: false,
-            isChrome: true
+            isChrome: true,
         };
-        if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+        if (navigator.userAgent.match(/Android/i) ||
+            navigator.userAgent.match(/webOS/i) ||
+            navigator.userAgent.match(/iPhone/i) ||
+            navigator.userAgent.match(/iPad/i) ||
+            navigator.userAgent.match(/iPod/i) ||
+            navigator.userAgent.match(/BlackBerry/i) ||
+            navigator.userAgent.match(/Windows Phone/i)) {
             this.Device.isMobile = true;
         }
         if (navigator.userAgent.indexOf("Chrome") == -1) {
@@ -124,7 +142,7 @@ var Artyom = /** @class */ (function () {
             lang: "en-GB",
             localService: false,
             name: "Google UK English Male",
-            voiceURI: "Google UK English Male"
+            voiceURI: "Google UK English Male",
         };
     }
     /**
@@ -156,7 +174,6 @@ var Artyom = /** @class */ (function () {
         }
         return true;
     };
-    ;
     /**
      * The SpeechSynthesisUtterance objects are stored in the artyom_garbage_collector variable
      * to prevent the wrong behaviour of artyom.say.
@@ -165,9 +182,8 @@ var Artyom = /** @class */ (function () {
      * @returns {Array<any>}
      */
     Artyom.prototype.clearGarbageCollection = function () {
-        return this.ArtyomGarbageCollection = [];
+        return (this.ArtyomGarbageCollection = []);
     };
-    ;
     /**
      * Displays a message in the console if the artyom propery DEBUG is set to true.
      *
@@ -179,16 +195,16 @@ var Artyom = /** @class */ (function () {
         if (this.ArtyomProperties.debug === true) {
             switch (type) {
                 case "error":
-                    console.log("%c" + preMessage + ":%c " + message, 'background: #C12127; color: black;', 'color:black;');
+                    console.log("%c" + preMessage + ":%c " + message, "background: #C12127; color: black;", "color:black;");
                     break;
                 case "warn":
                     console.warn(message);
                     break;
                 case "info":
-                    console.log("%c" + preMessage + ":%c " + message, 'background: #4285F4; color: #FFFFFF', 'color:black;');
+                    console.log("%c" + preMessage + ":%c " + message, "background: #4285F4; color: #FFFFFF", "color:black;");
                     break;
                 default:
-                    console.log("%c" + preMessage + ":%c " + message, 'background: #005454; color: #BFF8F8', 'color:black;');
+                    console.log("%c" + preMessage + ":%c " + message, "background: #005454; color: #BFF8F8", "color:black;");
                     break;
             }
         }
@@ -203,12 +219,12 @@ var Artyom = /** @class */ (function () {
      */
     Artyom.prototype.detectErrors = function () {
         var _this = this;
-        if ((window.location.protocol) == "file:") {
+        if (window.location.protocol == "file:") {
             var message = "Error: running Artyom directly from a file. The APIs require a different communication protocol like HTTP or HTTPS";
             console.error(message);
             return {
                 code: "artyom_error_localfile",
-                message: message
+                message: message,
             };
         }
         if (!_this.Device.isChrome) {
@@ -216,7 +232,7 @@ var Artyom = /** @class */ (function () {
             console.error(message);
             return {
                 code: "artyom_error_browser_unsupported",
-                message: message
+                message: message,
             };
         }
         if (window.location.protocol != "https:") {
@@ -232,7 +248,7 @@ var Artyom = /** @class */ (function () {
      * @returns {Array}
      */
     Artyom.prototype.emptyCommands = function () {
-        return this.ArtyomCommands = [];
+        return (this.ArtyomCommands = []);
     };
     /**
      * Returns an object with data of the matched element
@@ -274,7 +290,13 @@ var Artyom = /** @class */ (function () {
                 if (opcion instanceof RegExp) {
                     // If RegExp matches
                     if (opcion.test(voz)) {
-                        _this.debug(">> REGEX " + opcion.toString() + " MATCHED AGAINST " + voz + " WITH INDEX " + c + " IN COMMAND ", "info");
+                        _this.debug(">> REGEX " +
+                            opcion.toString() +
+                            " MATCHED AGAINST " +
+                            voz +
+                            " WITH INDEX " +
+                            c +
+                            " IN COMMAND ", "info");
                         encontrado = parseInt(c.toString());
                     }
                     // Otherwise just wildcards
@@ -284,26 +306,34 @@ var Artyom = /** @class */ (function () {
                         ///LOGIC HERE
                         var grupo = opcion.split("*");
                         if (grupo.length > 2) {
-                            console.warn("Artyom found a smart command with " + (grupo.length - 1) + " wildcards. Artyom only support 1 wildcard for each command. Sorry");
+                            console.warn("Artyom found a smart command with " +
+                                (grupo.length - 1) +
+                                " wildcards. Artyom only support 1 wildcard for each command. Sorry");
                             continue;
                         }
                         //START SMART COMMAND
                         var before = grupo[0];
                         var later = grupo[1];
                         // Wildcard in the end
-                        if ((later == "") || (later == " ")) {
-                            if ((voz.indexOf(before) != -1) || ((voz.toLowerCase()).indexOf(before.toLowerCase()) != -1)) {
-                                wildy = voz.replace(before, '');
-                                wildy = (wildy.toLowerCase()).replace(before.toLowerCase(), '');
+                        if (later == "" || later == " ") {
+                            if (voz.indexOf(before) != -1 ||
+                                voz.toLowerCase().indexOf(before.toLowerCase()) != -1) {
+                                wildy = voz.replace(before, "");
+                                wildy = wildy.toLowerCase().replace(before.toLowerCase(), "");
                                 encontrado = parseInt(c.toString());
                             }
                         }
                         else {
-                            if ((voz.indexOf(before) != -1) || ((voz.toLowerCase()).indexOf(before.toLowerCase()) != -1)) {
-                                if ((voz.indexOf(later) != -1) || ((voz.toLowerCase()).indexOf(later.toLowerCase()) != -1)) {
-                                    wildy = voz.replace(before, '').replace(later, '');
-                                    wildy = (wildy.toLowerCase()).replace(before.toLowerCase(), '').replace(later.toLowerCase(), '');
-                                    wildy = (wildy.toLowerCase()).replace(later.toLowerCase(), '');
+                            if (voz.indexOf(before) != -1 ||
+                                voz.toLowerCase().indexOf(before.toLowerCase()) != -1) {
+                                if (voz.indexOf(later) != -1 ||
+                                    voz.toLowerCase().indexOf(later.toLowerCase()) != -1) {
+                                    wildy = voz.replace(before, "").replace(later, "");
+                                    wildy = wildy
+                                        .toLowerCase()
+                                        .replace(before.toLowerCase(), "")
+                                        .replace(later.toLowerCase(), "");
+                                    wildy = wildy.toLowerCase().replace(later.toLowerCase(), "");
                                     encontrado = parseInt(c.toString());
                                 }
                             }
@@ -313,7 +343,7 @@ var Artyom = /** @class */ (function () {
                         console.warn("Founded command marked as SMART but have no wildcard in the indexes, remove the SMART for prevent extensive memory consuming or add the wildcard *");
                     }
                 }
-                if ((encontrado >= 0)) {
+                if (encontrado >= 0) {
                     encontrado = parseInt(c.toString());
                     break;
                 }
@@ -325,8 +355,8 @@ var Artyom = /** @class */ (function () {
                     instruction: instruction,
                     wildcard: {
                         item: wildy,
-                        full: voz
-                    }
+                        full: voz,
+                    },
                 };
                 return response;
             }
@@ -347,13 +377,25 @@ var Artyom = /** @class */ (function () {
                 if (instruction.smart) {
                     continue; //Jump wildcard commands
                 }
-                if ((voz === opcion)) {
-                    _this.debug(">> MATCHED FULL EXACT OPTION " + opcion + " AGAINST " + voz + " WITH INDEX " + c + " IN COMMAND ", "info");
+                if (voz === opcion) {
+                    _this.debug(">> MATCHED FULL EXACT OPTION " +
+                        opcion +
+                        " AGAINST " +
+                        voz +
+                        " WITH INDEX " +
+                        c +
+                        " IN COMMAND ", "info");
                     encontrado = parseInt(c.toString());
                     break;
                 }
-                else if ((voz.toLowerCase() === opcion.toLowerCase())) {
-                    _this.debug(">> MATCHED OPTION CHANGING ALL TO LOWERCASE " + opcion + " AGAINST " + voz + " WITH INDEX " + c + " IN COMMAND ", "info");
+                else if (voz.toLowerCase() === opcion.toLowerCase()) {
+                    _this.debug(">> MATCHED OPTION CHANGING ALL TO LOWERCASE " +
+                        opcion +
+                        " AGAINST " +
+                        voz +
+                        " WITH INDEX " +
+                        c +
+                        " IN COMMAND ", "info");
                     encontrado = parseInt(c.toString());
                     break;
                 }
@@ -362,7 +404,7 @@ var Artyom = /** @class */ (function () {
                 _this.triggerEvent(_this.ArtyomGlobalEvents.COMMAND_MATCHED);
                 var response = {
                     index: encontrado,
-                    instruction: instruction
+                    instruction: instruction,
                 };
                 return response;
             }
@@ -384,13 +426,25 @@ var Artyom = /** @class */ (function () {
                     continue; //Jump wildcard commands
                 }
                 var opcion = opciones[c];
-                if ((voz.indexOf(opcion) >= 0)) {
-                    _this.debug(">> MATCHED INDEX EXACT OPTION " + opcion + " AGAINST " + voz + " WITH INDEX " + c + " IN COMMAND ", "info");
+                if (voz.indexOf(opcion) >= 0) {
+                    _this.debug(">> MATCHED INDEX EXACT OPTION " +
+                        opcion +
+                        " AGAINST " +
+                        voz +
+                        " WITH INDEX " +
+                        c +
+                        " IN COMMAND ", "info");
                     encontrado = parseInt(c.toString());
                     break;
                 }
-                else if (((voz.toLowerCase()).indexOf(opcion.toLowerCase()) >= 0)) {
-                    _this.debug(">> MATCHED INDEX OPTION CHANGING ALL TO LOWERCASE " + opcion + " AGAINST " + voz + " WITH INDEX " + c + " IN COMMAND ", "info");
+                else if (voz.toLowerCase().indexOf(opcion.toLowerCase()) >= 0) {
+                    _this.debug(">> MATCHED INDEX OPTION CHANGING ALL TO LOWERCASE " +
+                        opcion +
+                        " AGAINST " +
+                        voz +
+                        " WITH INDEX " +
+                        c +
+                        " IN COMMAND ", "info");
                     encontrado = parseInt(c.toString());
                     break;
                 }
@@ -399,7 +453,7 @@ var Artyom = /** @class */ (function () {
                 _this.triggerEvent(_this.ArtyomGlobalEvents.COMMAND_MATCHED);
                 var response = {
                     index: encontrado,
-                    instruction: instruction
+                    instruction: instruction,
                 };
                 return response;
             }
@@ -429,7 +483,7 @@ var Artyom = /** @class */ (function () {
                         _this.triggerEvent(_this.ArtyomGlobalEvents.COMMAND_MATCHED);
                         var response = {
                             index: encontrado,
-                            instruction: instruction
+                            instruction: instruction,
                         };
                         return response;
                     }
@@ -491,7 +545,7 @@ var Artyom = /** @class */ (function () {
      * @returns {Boolean}
      */
     Artyom.prototype.speechSupported = function () {
-        return 'speechSynthesis' in window;
+        return "speechSynthesis" in window;
     };
     /**
      * Verify if the browser supports webkitSpeechRecognition.
@@ -500,7 +554,7 @@ var Artyom = /** @class */ (function () {
      * @returns {Boolean}
      */
     Artyom.prototype.recognizingSupported = function () {
-        return 'webkitSpeechRecognition' in window;
+        return "webkitSpeechRecognition" in window;
     };
     /**
      * Stops the actual and pendings messages that artyom have to say.
@@ -509,7 +563,7 @@ var Artyom = /** @class */ (function () {
      * @returns {undefined}
      */
     Artyom.prototype.shutUp = function () {
-        if ('speechSynthesis' in window) {
+        if ("speechSynthesis" in window) {
             do {
                 window.speechSynthesis.cancel();
             } while (window.speechSynthesis.pending === true);
@@ -527,7 +581,7 @@ var Artyom = /** @class */ (function () {
         return this.ArtyomProperties;
     };
     /**
-     * Returns the code language of artyom according to initialize function.
+     * Returns the TTS language code of artyom according to initialize function.
      * if initialize not used returns english GB.
      *
      * @tutorial http://docs.ourcodeworld.com/projects/artyom-js/documentation/methods/getlanguage
@@ -537,12 +591,22 @@ var Artyom = /** @class */ (function () {
         return this.ArtyomProperties.lang;
     };
     /**
+     * Returns the ASR language code of artyom according to initialize function.
+     * if initialize not used returns english GB.
+     *
+     * @tutorial http://docs.ourcodeworld.com/projects/artyom-js/documentation/methods/getAsrlanguage
+     * @returns {String}
+     */
+    Artyom.prototype.getAsrLanguage = function () {
+        return this.ArtyomProperties.asrLang;
+    };
+    /**
      * Retrieves the used version of Artyom.js
      *
      * @returns {String}
      */
     Artyom.prototype.getVersion = function () {
-        return '1.0.6';
+        return "1.0.6";
     };
     /**
      * Artyom awaits for orders when this function
@@ -570,7 +634,7 @@ var Artyom = /** @class */ (function () {
             this.ArtyomWebkitSpeechRecognition.continuous = true;
             this.ArtyomWebkitSpeechRecognition.interimResults = true;
         }
-        this.ArtyomWebkitSpeechRecognition.lang = this.ArtyomProperties.lang;
+        this.ArtyomWebkitSpeechRecognition.lang = this.ArtyomProperties.asrLang;
         this.ArtyomWebkitSpeechRecognition.onstart = function () {
             _this.debug("Event reached : " + _this.ArtyomGlobalEvents.COMMAND_RECOGNITION_START);
             _this.triggerEvent(_this.ArtyomGlobalEvents.COMMAND_RECOGNITION_START);
@@ -579,7 +643,7 @@ var Artyom = /** @class */ (function () {
             resolve();
         };
         /**
-         * Handle all artyom posible exceptions
+         * Handle all artyom possible exceptions
          *
          * @param {type} event
          * @returns {undefined}
@@ -587,25 +651,25 @@ var Artyom = /** @class */ (function () {
         this.ArtyomWebkitSpeechRecognition.onerror = function (event) {
             // Reject promise on initialization
             reject(event.error);
-            // Dispath error globally (artyom.when)
+            // Dispatch error globally (artyom.when)
             _this.triggerEvent(_this.ArtyomGlobalEvents.ERROR, {
-                code: event.error
+                code: event.error,
             });
-            if (event.error == 'audio-capture') {
+            if (event.error == "audio-capture") {
                 artyom_is_allowed = false;
             }
-            if (event.error == 'not-allowed') {
+            if (event.error == "not-allowed") {
                 artyom_is_allowed = false;
                 if (event.timeStamp - start_timestamp < 100) {
                     _this.triggerEvent(_this.ArtyomGlobalEvents.ERROR, {
                         code: "info-blocked",
-                        message: "Artyom needs the permision of the microphone, is blocked."
+                        message: "Artyom needs the permission of the microphone, is blocked.",
                     });
                 }
                 else {
                     _this.triggerEvent(_this.ArtyomGlobalEvents.ERROR, {
                         code: "info-denied",
-                        message: "Artyom needs the permision of the microphone, is denied"
+                        message: "Artyom needs the permission of the microphone, is denied",
                     });
                 }
             }
@@ -627,7 +691,7 @@ var Artyom = /** @class */ (function () {
                 }
                 _this.triggerEvent(_this.ArtyomGlobalEvents.COMMAND_RECOGNITION_END, {
                     code: "continuous_mode_enabled",
-                    message: "OnEnd event reached with continuous mode"
+                    message: "OnEnd event reached with continuous mode",
                 });
             }
             else {
@@ -640,14 +704,14 @@ var Artyom = /** @class */ (function () {
                     }, 500);
                     _this.triggerEvent(_this.ArtyomGlobalEvents.COMMAND_RECOGNITION_END, {
                         code: "continuous_mode_disabled",
-                        message: "OnEnd event reached without continuous mode"
+                        message: "OnEnd event reached without continuous mode",
                     });
                 }
             }
             _this.ArtyomProperties.recognizing = false;
         };
         /**
-         * Declare the processor dinamycally according to the mode of artyom
+         * Declare the processor dynamically according to the mode of artyom
          * to increase the performance.
          *
          * @type {Function}
@@ -668,10 +732,11 @@ var Artyom = /** @class */ (function () {
                     if (event.results[i].isFinal) {
                         var comando = _this.execute(identificated.trim());
                         // Redirect the output of the text if necessary
-                        if (typeof (_this.ArtyomProperties.helpers.redirectRecognizedTextOutput) === "function") {
+                        if (typeof _this.ArtyomProperties.helpers
+                            .redirectRecognizedTextOutput === "function") {
                             _this.ArtyomProperties.helpers.redirectRecognizedTextOutput(identificated, true);
                         }
-                        if ((comando) && (_this.ArtyomProperties.recognizing == true)) {
+                        if (comando && _this.ArtyomProperties.recognizing == true) {
                             _this.debug("<< Executing Matching Recognition in normal mode >>", "info");
                             _this.ArtyomWebkitSpeechRecognition.stop();
                             _this.ArtyomProperties.recognizing = false;
@@ -687,15 +752,18 @@ var Artyom = /** @class */ (function () {
                         }
                     }
                     else {
-                        // Redirect output when necesary
-                        if (typeof (_this.ArtyomProperties.helpers.redirectRecognizedTextOutput) === "function") {
+                        // Redirect output when necessary
+                        if (typeof _this.ArtyomProperties.helpers
+                            .redirectRecognizedTextOutput === "function") {
                             _this.ArtyomProperties.helpers.redirectRecognizedTextOutput(identificated, false);
                         }
-                        if (typeof (_this.ArtyomProperties.executionKeyword) === "string") {
+                        if (typeof _this.ArtyomProperties.executionKeyword === "string") {
                             if (identificated.indexOf(_this.ArtyomProperties.executionKeyword) != -1) {
-                                var comando = _this.execute(identificated.replace(_this.ArtyomProperties.executionKeyword, '').trim());
-                                if ((comando) && (_this.ArtyomProperties.recognizing == true)) {
-                                    _this.debug("<< Executing command ordered by ExecutionKeyword >>", 'info');
+                                var comando = _this.execute(identificated
+                                    .replace(_this.ArtyomProperties.executionKeyword, "")
+                                    .trim());
+                                if (comando && _this.ArtyomProperties.recognizing == true) {
+                                    _this.debug("<< Executing command ordered by ExecutionKeyword >>", "info");
                                     _this.ArtyomWebkitSpeechRecognition.stop();
                                     _this.ArtyomProperties.recognizing = false;
                                     //Executing Command Action
@@ -727,11 +795,12 @@ var Artyom = /** @class */ (function () {
                     var identificated = event.results[i][0].transcript;
                     if (!event.results[i].isFinal) {
                         var comando = _this.execute(identificated.trim());
-                        //Redirect output when necesary
-                        if (typeof (_this.ArtyomProperties.helpers.redirectRecognizedTextOutput) === "function") {
+                        //Redirect output when necessary
+                        if (typeof _this.ArtyomProperties.helpers
+                            .redirectRecognizedTextOutput === "function") {
                             _this.ArtyomProperties.helpers.redirectRecognizedTextOutput(identificated, true);
                         }
-                        if ((comando) && (_this.ArtyomProperties.recognizing == true)) {
+                        if (comando && _this.ArtyomProperties.recognizing == true) {
                             _this.debug("<< Executing Matching Recognition in quick mode >>", "info");
                             _this.ArtyomWebkitSpeechRecognition.stop();
                             _this.ArtyomProperties.recognizing = false;
@@ -747,11 +816,12 @@ var Artyom = /** @class */ (function () {
                     }
                     else {
                         var comando = _this.execute(identificated.trim());
-                        //Redirect output when necesary
-                        if (typeof (_this.ArtyomProperties.helpers.redirectRecognizedTextOutput) === "function") {
+                        //Redirect output when necessary
+                        if (typeof _this.ArtyomProperties.helpers
+                            .redirectRecognizedTextOutput === "function") {
                             _this.ArtyomProperties.helpers.redirectRecognizedTextOutput(identificated, false);
                         }
-                        if ((comando) && (_this.ArtyomProperties.recognizing == true)) {
+                        if (comando && _this.ArtyomProperties.recognizing == true) {
                             _this.debug("<< Executing Matching Recognition in quick mode >>", "info");
                             _this.ArtyomWebkitSpeechRecognition.stop();
                             _this.ArtyomProperties.recognizing = false;
@@ -774,14 +844,15 @@ var Artyom = /** @class */ (function () {
             onResultProcessor = function (event) {
                 var cantidadResultados = event.results.length;
                 _this.triggerEvent(_this.ArtyomGlobalEvents.TEXT_RECOGNIZED);
-                if (typeof (_this.ArtyomProperties.helpers.remoteProcessorHandler) !== "function") {
+                if (typeof _this.ArtyomProperties.helpers.remoteProcessorHandler !==
+                    "function") {
                     return _this.debug("The remoteProcessorService is undefined.", "warn");
                 }
                 for (var i = event.resultIndex; i < cantidadResultados; ++i) {
                     var identificated = event.results[i][0].transcript;
                     _this.ArtyomProperties.helpers.remoteProcessorHandler({
                         text: identificated,
-                        isFinal: event.results[i].isFinal
+                        isFinal: event.results[i].isFinal,
                     });
                 }
             };
@@ -815,7 +886,8 @@ var Artyom = /** @class */ (function () {
                 _this.debug("Artyom is not obeying", "warn");
                 // If the obeyKeyword is found in the recognized text
                 // enable command recognition again
-                if (((interim).indexOf(_this.ArtyomProperties.obeyKeyword) > -1) || (temporal).indexOf(_this.ArtyomProperties.obeyKeyword) > -1) {
+                if (interim.indexOf(_this.ArtyomProperties.obeyKeyword) > -1 ||
+                    temporal.indexOf(_this.ArtyomProperties.obeyKeyword) > -1) {
                     _this.ArtyomProperties.obeying = true;
                 }
             }
@@ -832,7 +904,7 @@ var Artyom = /** @class */ (function () {
             catch (e) {
                 _this.triggerEvent(_this.ArtyomGlobalEvents.ERROR, {
                     code: "recognition_overlap",
-                    message: "A webkitSpeechRecognition instance has been started while there's already running. Is recommendable to restart the Browser"
+                    message: "A webkitSpeechRecognition instance has been started while there's already running. Is recommendable to restart the Browser",
                 });
             }
         }
@@ -849,12 +921,15 @@ var Artyom = /** @class */ (function () {
      */
     Artyom.prototype.initialize = function (config) {
         var _this = this;
-        if (typeof (config) !== "object") {
+        if (typeof config !== "object") {
             return Promise.reject("You must give the configuration for start artyom properly.");
         }
         if (config.hasOwnProperty("lang")) {
             _this.ArtyomVoice = _this.getVoice(config.lang);
             _this.ArtyomProperties.lang = config.lang;
+        }
+        if (config.hasOwnProperty("asrLang")) {
+            _this.ArtyomProperties.asrLang = config.asrLang;
         }
         if (config.hasOwnProperty("continuous")) {
             if (config.continuous) {
@@ -918,13 +993,13 @@ var Artyom = /** @class */ (function () {
             then: function (action) {
                 var command = {
                     indexes: indexes,
-                    action: action
+                    action: action,
                 };
                 if (smart) {
                     command.smart = true;
                 }
                 _this.addCommands(command);
-            }
+            },
         };
     };
     /**
@@ -935,7 +1010,7 @@ var Artyom = /** @class */ (function () {
      */
     Artyom.prototype.triggerEvent = function (name, param) {
         var event = new CustomEvent(name, {
-            'detail': param
+            detail: param,
         });
         document.dispatchEvent(event);
         return event;
@@ -987,7 +1062,7 @@ var Artyom = /** @class */ (function () {
      * @return {Boolean}
      */
     Artyom.prototype.voiceAvailable = function (languageCode) {
-        return typeof (this.getVoice(languageCode)) !== "undefined";
+        return typeof this.getVoice(languageCode) !== "undefined";
     };
     /**
      * A boolean to check if artyom is obeying commands or not.
@@ -1003,7 +1078,7 @@ var Artyom = /** @class */ (function () {
      * @returns {Boolean}
      */
     Artyom.prototype.obey = function () {
-        return this.ArtyomProperties.obeying = true;
+        return (this.ArtyomProperties.obeying = true);
     };
     /**
      * Pause the processing of commands. Artyom still listening in the background and it can be resumed after a couple of seconds.
@@ -1011,7 +1086,7 @@ var Artyom = /** @class */ (function () {
      * @returns {Boolean}
      */
     Artyom.prototype.dontObey = function () {
-        return this.ArtyomProperties.obeying = false;
+        return (this.ArtyomProperties.obeying = false);
     };
     /**
      * This function returns a boolean according to the speechSynthesis status
@@ -1070,7 +1145,7 @@ var Artyom = /** @class */ (function () {
     Artyom.prototype.getVoice = function (languageCode) {
         var voiceIdentifiersArray = this.ArtyomVoicesIdentifiers[languageCode];
         if (!voiceIdentifiersArray) {
-            console.warn("The providen language " + languageCode + " isn't available, using English Great britain as default");
+            console.warn("The provided language " + languageCode + " isn't available, using English Great britain as default");
             voiceIdentifiersArray = this.ArtyomVoicesIdentifiers["en-GB"];
         }
         var voice = undefined;
@@ -1078,7 +1153,8 @@ var Artyom = /** @class */ (function () {
         var voicesLength = voiceIdentifiersArray.length;
         var _loop_1 = function (i) {
             var foundVoice = voices.filter(function (voice) {
-                return ((voice.name == voiceIdentifiersArray[i]) || (voice.lang == voiceIdentifiersArray[i]));
+                return (voice.name == voiceIdentifiersArray[i] ||
+                    voice.lang == voiceIdentifiersArray[i]);
             })[0];
             if (foundVoice) {
                 voice = foundVoice;
@@ -1125,7 +1201,7 @@ var Artyom = /** @class */ (function () {
                 settings.onResult(interim, temporal);
             }
         };
-        return new function () {
+        return new (function () {
             var dictation = dictado;
             var flagStartCallback = true;
             var flagRestart = false;
@@ -1135,7 +1211,7 @@ var Artyom = /** @class */ (function () {
                     flagRestart = true;
                 }
                 dictation.onstart = function () {
-                    if (typeof (settings.onStart) === "function") {
+                    if (typeof settings.onStart === "function") {
                         if (flagStartCallback === true) {
                             settings.onStart();
                         }
@@ -1148,7 +1224,7 @@ var Artyom = /** @class */ (function () {
                     }
                     else {
                         flagStartCallback = true;
-                        if (typeof (settings.onEnd) === "function") {
+                        if (typeof settings.onEnd === "function") {
                             settings.onEnd();
                         }
                     }
@@ -1159,10 +1235,10 @@ var Artyom = /** @class */ (function () {
                 flagRestart = false;
                 dictation.stop();
             };
-            if (typeof (settings.onError) === "function") {
+            if (typeof settings.onError === "function") {
                 dictation.onerror = settings.onError;
             }
-        };
+        })();
     };
     /**
      * A voice prompt will be executed.
@@ -1171,7 +1247,7 @@ var Artyom = /** @class */ (function () {
      * @returns {undefined}
      */
     Artyom.prototype.newPrompt = function (config) {
-        if (typeof (config) !== "object") {
+        if (typeof config !== "object") {
             console.error("Expected the prompt configuration.");
         }
         var copyActualCommands = Object.assign([], this.ArtyomCommands);
@@ -1183,31 +1259,31 @@ var Artyom = /** @class */ (function () {
             action: function (i, wildcard) {
                 _this.ArtyomCommands = copyActualCommands;
                 var toExe = config.onMatch(i, wildcard);
-                if (typeof (toExe) !== "function") {
+                if (typeof toExe !== "function") {
                     console.error("onMatch function expects a returning function to be executed");
                     return;
                 }
                 toExe();
-            }
+            },
         };
         if (config.smart) {
             promptCommand.smart = true;
         }
         this.addCommands(promptCommand);
-        if (typeof (config.beforePrompt) !== "undefined") {
+        if (typeof config.beforePrompt !== "undefined") {
             config.beforePrompt();
         }
         var callbacks = {
             onStart: function () {
-                if (typeof (config.onStartPrompt) !== "undefined") {
+                if (typeof config.onStartPrompt !== "undefined") {
                     config.onStartPrompt();
                 }
             },
             onEnd: function () {
-                if (typeof (config.onEndPrompt) !== "undefined") {
+                if (typeof config.onEndPrompt !== "undefined") {
                     config.onEndPrompt();
                 }
-            }
+            },
         };
         this.say(config.question, callbacks);
     };
@@ -1223,7 +1299,7 @@ var Artyom = /** @class */ (function () {
             this.say(data[index]);
             return {
                 text: data[index],
-                index: index
+                index: index,
             };
         }
         else {
@@ -1238,10 +1314,10 @@ var Artyom = /** @class */ (function () {
      */
     Artyom.prototype.setDebug = function (status) {
         if (status) {
-            return this.ArtyomProperties.debug = true;
+            return (this.ArtyomProperties.debug = true);
         }
         else {
-            return this.ArtyomProperties.debug = false;
+            return (this.ArtyomProperties.debug = false);
         }
     };
     /**
@@ -1253,19 +1329,19 @@ var Artyom = /** @class */ (function () {
      */
     Artyom.prototype.simulateInstruction = function (sentence) {
         var _this = this;
-        if ((!sentence) || (typeof (sentence) !== "string")) {
+        if (!sentence || typeof sentence !== "string") {
             console.warn("Cannot execute a non string command");
             return false;
         }
         var foundCommand = _this.execute(sentence); //Command founded object
-        if (typeof (foundCommand) === "object") {
+        if (typeof foundCommand === "object") {
             if (foundCommand.instruction) {
                 if (foundCommand.instruction.smart) {
-                    _this.debug('Smart command matches with simulation, executing', "info");
+                    _this.debug("Smart command matches with simulation, executing", "info");
                     foundCommand.instruction.action(foundCommand.index, foundCommand.wildcard.item, foundCommand.wildcard.full);
                 }
                 else {
-                    _this.debug('Command matches with simulation, executing', "info");
+                    _this.debug("Command matches with simulation, executing", "info");
                     foundCommand.instruction.action(foundCommand.index); //Execute Normal command
                 }
                 return true;
@@ -1282,19 +1358,45 @@ var Artyom = /** @class */ (function () {
      * @returns {String}
      */
     Artyom.prototype.soundex = function (s) {
-        var a = s.toLowerCase().split('');
+        var a = s.toLowerCase().split("");
         var f = a.shift();
-        var r = '';
-        var codes = { a: "", e: "", i: "", o: "", u: "", b: 1, f: 1, p: 1, v: 1, c: 2, g: 2, j: 2, k: 2, q: 2, s: 2, x: 2, z: 2, d: 3, t: 3, l: 4, m: 5, n: 5, r: 6 };
-        r = f + a
-            .map(function (v, i, a) {
-            return codes[v];
-        })
-            .filter(function (v, i, a) {
-            return ((i === 0) ? v !== codes[f] : v !== a[i - 1]);
-        })
-            .join('');
-        return (r + '000').slice(0, 4).toUpperCase();
+        var r = "";
+        var codes = {
+            a: "",
+            e: "",
+            i: "",
+            o: "",
+            u: "",
+            b: 1,
+            f: 1,
+            p: 1,
+            v: 1,
+            c: 2,
+            g: 2,
+            j: 2,
+            k: 2,
+            q: 2,
+            s: 2,
+            x: 2,
+            z: 2,
+            d: 3,
+            t: 3,
+            l: 4,
+            m: 5,
+            n: 5,
+            r: 6,
+        };
+        r =
+            f +
+                a
+                    .map(function (v, i, a) {
+                    return codes[v];
+                })
+                    .filter(function (v, i, a) {
+                    return i === 0 ? v !== codes[f] : v !== a[i - 1];
+                })
+                    .join("");
+        return (r + "000").slice(0, 4).toUpperCase();
     };
     /**
      * Splits a string into an array of strings with a limited size (chunk_length).
@@ -1309,7 +1411,7 @@ var Artyom = /** @class */ (function () {
         var prev = 0;
         var output = [];
         while (input[curr]) {
-            if (input[curr++] == ' ') {
+            if (input[curr++] == " ") {
                 output.push(input.substring(prev, curr));
                 prev = curr;
                 curr += chunk_length;
@@ -1326,7 +1428,7 @@ var Artyom = /** @class */ (function () {
      * @returns {Boolean}
      */
     Artyom.prototype.redirectRecognizedTextOutput = function (action) {
-        if (typeof (action) != "function") {
+        if (typeof action != "function") {
             console.warn("Expected function to handle the recognized text ...");
             return false;
         }
@@ -1383,7 +1485,7 @@ var Artyom = /** @class */ (function () {
         }
         // If is first text chunk (onStart)
         if (actualChunk == 1) {
-            msg.addEventListener('start', function () {
+            msg.addEventListener("start", function () {
                 // Set artyom is talking
                 _this.ArtyomProperties.speaking = true;
                 // Trigger the onSpeechSynthesisStart event
@@ -1391,15 +1493,15 @@ var Artyom = /** @class */ (function () {
                 _this.triggerEvent(_this.ArtyomGlobalEvents.SPEECH_SYNTHESIS_START);
                 // Trigger the onStart callback if exists
                 if (callbacks) {
-                    if (typeof (callbacks.onStart) == "function") {
+                    if (typeof callbacks.onStart == "function") {
                         callbacks.onStart.call(msg);
                     }
                 }
             });
         }
         // If is final text chunk (onEnd)
-        if ((actualChunk) >= totalChunks) {
-            msg.addEventListener('end', function () {
+        if (actualChunk >= totalChunks) {
+            msg.addEventListener("end", function () {
                 // Set artyom is talking
                 _this.ArtyomProperties.speaking = false;
                 // Trigger the onSpeechSynthesisEnd event
@@ -1407,14 +1509,14 @@ var Artyom = /** @class */ (function () {
                 _this.triggerEvent(_this.ArtyomGlobalEvents.SPEECH_SYNTHESIS_END);
                 // Trigger the onEnd callback if exists.
                 if (callbacks) {
-                    if (typeof (callbacks.onEnd) == "function") {
+                    if (typeof callbacks.onEnd == "function") {
                         callbacks.onEnd.call(msg);
                     }
                 }
             });
         }
         // Notice how many chunks were processed for the given text.
-        this.debug((actualChunk) + " text chunk processed succesfully out of " + totalChunks);
+        this.debug(actualChunk + " text chunk processed succesfully out of " + totalChunks);
         // Important : Save the SpeechSynthesisUtterance object in memory, otherwise it will get lost
         this.ArtyomGarbageCollection.push(msg);
         window.speechSynthesis.speak(msg);
@@ -1432,7 +1534,7 @@ var Artyom = /** @class */ (function () {
         var _this = this;
         var definitive = [];
         if (this.speechSupported()) {
-            if (typeof (message) != 'string') {
+            if (typeof message != "string") {
                 return console.warn("Artyom expects a string to speak " + typeof message + " given");
             }
             if (!message.length) {
@@ -1463,7 +1565,7 @@ var Artyom = /** @class */ (function () {
             definitive = definitive.filter(function (e) { return e; });
             // Finally proceed to talk the chunks and assign the callbacks.
             definitive.forEach(function (chunk, index) {
-                var numberOfChunk = (index + 1);
+                var numberOfChunk = index + 1;
                 if (chunk) {
                     _this.talk(chunk, numberOfChunk, definitive.length, callbacks);
                 }
@@ -1471,7 +1573,7 @@ var Artyom = /** @class */ (function () {
             // Save the spoken text into the lastSay object of artyom
             _this.ArtyomProperties.helpers.lastSay = {
                 text: message,
-                date: new Date()
+                date: new Date(),
             };
         }
     };
